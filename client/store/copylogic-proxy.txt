@@ -1,0 +1,43 @@
+      if (typeof window !== "undefined") {
+        let storedItem = localStorage.getItem("myCart");
+        console.log(Boolean(storedItem));
+        if (storedItem && existingItem) {
+          const copyStoredItem = JSON.parse(storedItem);
+          // console.log(copyStoredItem);
+          const removeRepeat = copyStoredItem.filter(
+            (v: any) =>
+              v.authId !== existingItem.authId && v.id !== existingItem.id
+          );
+          const mergeArray = removeRepeat.concat(state.items);
+          localStorage.setItem("myCart", JSON.stringify(mergeArray));
+        } else if (storedItem && !existingItem) {
+          const copyStoredItem = JSON.parse(storedItem);
+          const removeRepeat = copyStoredItem.filter(
+            (v: any) => v.authId !== newItem.authId && v.id !== newItem.id
+          );
+          const mergeArray = removeRepeat.concat(state.items);
+          localStorage.setItem("myCart", JSON.stringify(mergeArray));
+        } else {
+          localStorage.setItem("myCart", JSON.stringify(state.items));
+        }
+      }
+      
+      if (typeof window !== "undefined") {
+        let storedItem = localStorage.getItem("myCart");
+        // console.log(Boolean(storedItem));
+        if (storedItem) {
+          const copyStoredItem = JSON.parse(storedItem);
+          // const proxy = copyStoredItem.find((v) => v.includes("Proxy"));
+          // console.log(proxy);
+
+          // const removeRepeat = copyStoredItem.filter(
+          //   (v: any) => v.authId === newItem.authId && v.id !== newItem.id
+          // );
+          // console.log(removeRepeat);
+          const mergeArray = copyStoredItem.concat(state.items);
+          console.log(mergeArray);
+          localStorage.setItem("myCart", JSON.stringify(mergeArray));
+        } else {
+          localStorage.setItem("myCart", JSON.stringify(state.items));
+        }
+      }
