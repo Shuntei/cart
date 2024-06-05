@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { RootState } from ".";
-// import { JWT_CART_POST } from "@/components/config/api-path";
+import { JWT_CART_POST } from "@/components/config/api-path";
+import axios from "axios";
 
 interface CartItem {
   authId: number;
@@ -16,17 +17,8 @@ interface CartState {
   authId: number;
 }
 
-const loadCartFromLocalStorage = () => {
-  if (typeof window !== "undefined") {
-    const storedItems = localStorage.getItem("myCart");
-    return storedItems ? JSON.parse(storedItems) : [];
-  }
-  return [];
-};
-
 const initialState: CartState = {
-  // items: [],
-  items: loadCartFromLocalStorage(),
+  items: [],
   authId: 0,
 };
 
@@ -34,10 +26,20 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
+    // addQtyInShop(state, action) {
+    //   const thisItem = action.payload;
+    //   const existingItem = state.items.find((v) => v.id === thisItem);
+    //   if (existingItem) existingItem.quantity++;
+    // },
+    removerQtyInShop(state, action) {
+      const thisItem = action.payload;
+      const existingItem = state.items.find((v) => v.id === thisItem);
+      if (existingItem && existingItem.quantity > 1) existingItem.quantity--;
+    },
     addItemToCart(state, action) {
       const newItem = action.payload;
       const existingItem = state.items.find(
-        (v) => v.authId === newItem.authId && v.id === newItem.id
+        (v) => v.authId === v.authId && v.id === newItem.id
       );
       console.log(existingItem);
       if (!existingItem) {
@@ -93,8 +95,7 @@ const cartSlice = createSlice({
     },
     addQtyInCart(state, action) {
       const thisItem = action.payload;
-
-      // console.log(thisItem);
+      console.log(thisItem);
       const existingItem = state.items.find(
         (v) => v.id === thisItem.id && v.authId === thisItem.authId
       );
@@ -107,13 +108,14 @@ const cartSlice = createSlice({
         let storedItem = localStorage.getItem("myCart");
         // console.log(Boolean(storedItem));
         // 先確認是否有資料
-        if (storedItem) {
+        if (storedItem && existingItem) {
           const copyStoredItem = JSON.parse(storedItem);
           // console.log("copyStoredItem", copyStoredItem);
           // console.log("newItem", newItem);
-          // 確認是否重複(使用者和商品都要)
+          // 在確認是否重複(使用者和商品都要)
           const isRepeat = copyStoredItem.filter(
-            (v: any) => v.authId === thisItem.authId && v.id === thisItem.id
+            (v: any) =>
+              v.authId === existingItem.authId && v.id === existingItem.id
           );
           // console.log("removeRepeat", removeRepeat);
           // console.log("removeRepeatlength", removeRepeat.length);
@@ -121,7 +123,7 @@ const cartSlice = createSlice({
             // 有重複資料存在，使用更新狀態並且加入其他使用者
             console.log("length>0");
             const othersCart = copyStoredItem.filter(
-              (v: any) => v.authId !== thisItem.authId
+              (v: any) => v.authId !== existingItem.authId
             );
             const mergeArray = othersCart.concat(state.items);
             localStorage.setItem("myCart", JSON.stringify(mergeArray));
@@ -152,7 +154,36 @@ const cartSlice = createSlice({
         existingItem.totalPrice -= existingItem?.price;
       }
       if (typeof window !== "undefined") {
-        localStorage.setItem("myCart", JSON.stringify(state.items));
+        let storedItem = localStorage.getItem("myCart");
+        // console.log(Boolean(storedItem));
+        // 先確認是否有資料
+        if (storedItem) {
+          const copyStoredItem = JSON.parse(storedItem);
+          // console.log("copyStoredItem", copyStoredItem);
+          // console.log("newItem", newItem);
+          // 在確認是否重複(使用者和商品都要)
+          const isRepeat = copyStoredItem.filter(
+            (v: any) => v.authId === thisItem.authId && v.id === thisItem.id
+          );
+          // console.log("removeRepeat", removeRepeat);
+          // console.log("removeRepeatlength", removeRepeat.length);
+          if (isRepeat.length > 0) {
+            // 有重複資料存在，使用更新狀態並且加入其他使用者
+            console.log("length>0");
+            const othersCart = copyStoredItem.filter(
+              (v: any) => v.authId !== thisItem.authId
+            );
+            const mergeArray = othersCart.concat(state.items);
+            localStorage.setItem("myCart", JSON.stringify(mergeArray));
+          } else {
+            // 沒重複資料存在，加入新資料並且加入原有資料
+            console.log("length===0");
+            const mergeArray = copyStoredItem.concat(thisItem);
+            localStorage.setItem("myCart", JSON.stringify(mergeArray));
+          }
+        } else {
+          localStorage.setItem("myCart", JSON.stringify(state.items));
+        }
       }
     },
   },

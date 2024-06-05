@@ -36,6 +36,7 @@ export default function Shop() {
     id: string,
     price: number,
     quantity: number,
+    totalPrice: number,
     description: string
   ) => {
     dispatch(
@@ -44,6 +45,7 @@ export default function Shop() {
         id,
         price,
         quantity,
+        totalPrice,
         description,
       })
     );
@@ -63,6 +65,7 @@ export default function Shop() {
 
   return (
     <>
+      {itemQty ? console.log(itemQty.map((v) => v)) : "沒有"}
       {/* <ul className="flex space-x-10 m-5">
         {types.map((v, i) => {
           return (
@@ -87,27 +90,30 @@ export default function Shop() {
                 <p>{v.description}</p>
                 <div className="card-actions justify-end">
                   <div className="text-red-500">&#36;{`${v.price}`}</div>
-                  {/* <div className="badge badge-outline">Products</div> */}
                 </div>
                 <div className="card-actions space-x-5 flex items-center justify-end ">
                   <div className="flex items-center">
                     <span className=" w-[70px]">數量: {v.quantity}</span>
                     <button
                       className="btn btn-sm w-10 mx-1"
-                      onClick={() => qtyPlusHandler(v.id)}
+                      onClick={() =>
+                        auth && auth.data.id !== 0 && qtyPlusHandler(v.id)
+                      }
                     >
                       <FaPlus />
                     </button>
                     <button
                       className="btn btn-sm w-10 mx-1"
-                      onClick={() => qtyMinusHandler(v.id)}
+                      onClick={() =>
+                        auth && auth.data.id !== 0 && qtyMinusHandler(v.id)
+                      }
                     >
                       <FaMinus />
                     </button>
                   </div>
                 </div>
                 <button
-                  className="btn btn-accent"
+                  className="btn btn-accent text-white text-lg"
                   onClick={() =>
                     auth && auth.data.id !== 0
                       ? addToCartHandler(
@@ -115,6 +121,7 @@ export default function Shop() {
                           v.id,
                           v.price,
                           v.quantity,
+                          v.quantity * v.price,
                           v.description
                         )
                       : openModal()

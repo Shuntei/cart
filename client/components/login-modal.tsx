@@ -58,6 +58,7 @@ export default function LoginModal() {
             mySwal.fire({
               icon: "success",
               title: "登入成功",
+              confirmButtonColor: "oklch(76.76% 0.184 183.61 / 1)",
             });
           } else {
             const loginModal = document.getElementById(
@@ -124,7 +125,7 @@ export default function LoginModal() {
                 Login
               </button>
             </div>
-            <div className="text-sm">OR</div>
+            {/* <div className="text-sm">OR</div> */}
           </form>
         </div>
       </dialog>

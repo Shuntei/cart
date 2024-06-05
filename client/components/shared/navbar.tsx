@@ -4,7 +4,6 @@ import { IoPersonCircleOutline } from "react-icons/io5";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { CiMenuBurger } from "react-icons/ci";
 import { AiTwotoneShop } from "react-icons/ai";
-import { BsShop } from "react-icons/bs";
 import { useAuth } from "@/contexts/auth-context";
 import { useRouter } from "next/router";
 
@@ -31,7 +30,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="flex h-[70px] bg-zinc-200 items-center">
+      <nav className="flex h-[70px] bg-zinc-100 items-center">
         <div className="flex ms-10 me-5 space-x-2 items-center">
           <AiTwotoneShop className="text-[30px]" />
           <h2 className="text-[26px] hidden lg:block">服飾店</h2>

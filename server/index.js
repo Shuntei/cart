@@ -96,9 +96,9 @@ app.post("/login-jwt", async (req, res) => {
   res.json(output);
 });
 
-// app.post("/api/cart", async (req, res) => {
-//   console.log(req.body);
-// });
+app.post("/api/cart", async (req, res) => {
+  console.log(req.body);
+});
 
 const port = process.env.WEB_PORT || 3002;
 app.listen(port, () => {
